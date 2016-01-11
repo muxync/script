@@ -75,7 +75,8 @@ OPTS_ALL=$(getopt --options ${OPTS_SHORT} --long ${OPTS_LONG} \
 # Check for bad arguments
 if [ $? -ne 0 ];
 then
-    exit 1
+    echo "${SCRIPT}: bad argument(s) in getopt initialization"
+    exit 2
 fi
 
 # Evaluate and parse command-line options
@@ -241,4 +242,3 @@ echo "Creating VM..."
 echo ${VM_CREATE}
 echo
 eval ${VM_CREATE}
-
