@@ -47,24 +47,17 @@ USAGE="usage: ${SCRIPT} [-h] [-n NAME] [-u URI] [-v] [-i ISO] [-r RAM]
 
 optional arguments:
   -h, --help            show this help message and exit
-  -n NAME, --name NAME
-                        name for virtual machine
-  -u URI, --uri URI
-                        hypervisor URI
-  -v, --hvm
-                        use full virtualization
-  -i ISO, --iso ISO
-                        path to the ISO disk image
-  -r RAM, --ram RAM
-                        RAM allocated to the VM in MB
-  -s SIZE, --size SIZE
-                        disk size of the VM in GB
+  -n NAME, --name NAME  name for virtual machine
+  -u URI, --uri URI     hypervisor URI
+  -v, --hvm             use full virtualization
+  -i ISO, --iso ISO     path to the ISO disk image
+  -r RAM, --ram RAM     RAM allocated to the VM in MB
+  -s SIZE, --size SIZE  disk size of the VM in GB
   -f FORMAT, --format FORMAT
                         format of the disk disk image
   -g GRAPHICS, --graphics GRAPHICS
                         graphics connection type
-  -a, --autostart
-                        autostart the VM at host boot"
+  -a, --autostart       autostart the VM at host boot"
 
 # Configure getopt
 OPTS_SHORT="hn:u:vi:r:s:f:g:a"
