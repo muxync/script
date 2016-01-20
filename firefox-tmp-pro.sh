@@ -5,7 +5,7 @@
 # Run firefox using a temporary profile
 #
 # Creates a permission safe folder for the invoker in /tmp/ using mktemp
-# Launches a new instance of firefox and cleans up the /tmp/ directort on exit
+# Launches a new instance of firefox and cleans up the /tmp/ directory on exit
 # Optionally installs add-ons and/or start in private browsing mode
 #
 # Author: Mark Mulligan (muxync)
