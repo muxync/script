@@ -35,7 +35,10 @@ SCRIPT=$(basename ${BASH_SOURCE[0]})
 ADDON_ARRAY=()
 
 # Check getopt compatibility
-if $(getopt --test >/dev/null 2>&1) ; [ $? -ne 4 ]; then
+if
+   $(getopt --test > /dev/null 2>&1)
+                                      [ $? -ne 4 ]
+then
     echo "${SCRIPT}: old version of getopt detected using 'getopt --test'"
     echo "${SCRIPT}: install GNU getopt (util-linux) and try again"
     exit 1
@@ -68,8 +71,7 @@ OPTS_ALL=$(getopt --options ${OPTS_SHORT} --long ${OPTS_LONG} \
     --name ${SCRIPT} -- "$@")
 
 # Check for bad arguments
-if [ $? -ne 0 ];
-then
+if [ $? -ne 0 ]; then
     exit 1
 fi
 
@@ -78,74 +80,74 @@ eval set -- "${OPTS_ALL}"
 
 while true; do
     case "$1" in
-        -h|-\?|--help)
+        -h | -\? | --help)
             echo "${USAGE}"
             exit
             ;;
-        -a|--adblockplus)
+        -a | --adblockplus)
             ADDON_ARRAY+=("ADBLOCK_PLUS")
             shift
             ;;
-        -d|--disconnect)
+        -d | --disconnect)
             ADDON_ARRAY+=("DISCONNECT")
             shift
             ;;
-        -e|--errorzillaplus)
+        -e | --errorzillaplus)
             ADDON_ARRAY+=("ERRORZILLA_PLUS")
             shift
             ;;
-        -f|--flagfox)
+        -f | --flagfox)
             ADDON_ARRAY+=("FLAGFOX")
             shift
             ;;
-        -s|--httpseverywhere)
+        -s | --httpseverywhere)
             ADDON_ARRAY+=("HTTPS_EVERYWHERE")
             shift
             ;;
-        -n|--noscript)
+        -n | --noscript)
             ADDON_ARRAY+=("NOSCRIPT")
             shift
             ;;
-        -q|--qrcoder)
+        -q | --qrcoder)
             ADDON_ARRAY+=("QRCODER")
             shift
             ;;
-        -r|--reddites)
+        -r | --reddites)
             ADDON_ARRAY+=("REDDIT_ES")
             shift
             ;;
-        -t|--tabmixplus)
+        -t | --tabmixplus)
             ADDON_ARRAY+=("TAB_MIX_PLUS")
             shift
             ;;
-        -b|--ublockorigin)
+        -b | --ublockorigin)
             ADDON_ARRAY+=("UBLOCK_ORIGIN")
             shift
             ;;
-        -u|--url)
+        -u | --url)
             ADDON_ARRAY+=("$2")
             shift 2
             ;;
-        -p|--private)
+        -p | --private)
             PRIVATE="-private"
             shift
             ;;
         --)
-            shift;
+            shift
             break
             ;;
-    esac
+  esac
 done
 
 ## Functions
 # Clean up the profile directory
-clean_up () {
+clean_up()  {
     rm -rf ${PROFILE_DIR}
     exit $?
 }
 
 # Download and install an add-on
-addon_install () {
+addon_install()  {
     # Use indirect parameter expansion to obtain url value from addon string
     local addon_url="${!addon}"
     local addon_path="${PROFILE_DIR}/addon-latest.xpi"
@@ -153,11 +155,11 @@ addon_install () {
     # if addon_url is empty, assume addon was passed with --url option
     if [ -z "${addon_url}" ]; then
         addon_url="${addon}"
-    fi
+  fi
 
     wget "${addon_url}" --output-document="${addon_path}"
-    addon_renamed=$(unzip -p "${addon_path}" install.rdf | grep 'id' | \
-        cut -f2 -d">"|cut -f1 -d"<" | head -1)
+    addon_renamed=$(unzip -p "${addon_path}" install.rdf | grep 'id' \
+                                                                     | cut -f2 -d">" | cut -f1 -d"<" | head -1)
     mv "${addon_path}" "${EXTENSIONS_DIR}/${addon_renamed}.xpi"
 }
 
@@ -169,15 +171,13 @@ trap clean_up SIGINT SIGTERM
 PROFILE_DIR=$(mktemp -p ${TMP_DIR} -d ${FIREFOX_DIR})
 
 # Install add-ons (if applicable)
-if [ "${#ADDON_ARRAY[@]}" -ne 0 ];
-then
+if [ "${#ADDON_ARRAY[@]}" -ne 0 ]; then
     EXTENSIONS_DIR="${PROFILE_DIR}/extensions"
     mkdir "${EXTENSIONS_DIR}"
-    for i in "${ADDON_ARRAY[@]}"
-    do
+    for i in "${ADDON_ARRAY[@]}"; do
         addon="${i}"
         addon_install
-    done
+  done
 fi
 
 # Run firefox and cleanup when finished

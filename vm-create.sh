@@ -35,7 +35,10 @@ ISO_DEFAULT=$(printf '%s\n' ${ISO_DIR}/${ISO_TYPE} | tail -1)
 SCRIPT=$(basename ${BASH_SOURCE[0]})
 
 # Check getopt compatibility
-if $(getopt --test >/dev/null 2>&1) ; [ $? -ne 4 ]; then
+if
+   $(getopt --test > /dev/null 2>&1)
+                                      [ $? -ne 4 ]
+then
     echo "${SCRIPT}: old version of getopt detected using 'getopt --test'"
     echo "${SCRIPT}: install GNU getopt (util-linux) and try again"
     exit 1
@@ -66,8 +69,7 @@ OPTS_ALL=$(getopt --options ${OPTS_SHORT} --long ${OPTS_LONG} \
     --name ${SCRIPT} -- "$@")
 
 # Check for bad arguments
-if [ $? -ne 0 ];
-then
+if [ $? -ne 0 ]; then
     echo "${SCRIPT}: bad argument(s) in getopt initialization"
     exit 2
 fi
@@ -77,57 +79,57 @@ eval set -- "${OPTS_ALL}"
 
 while true; do
     case "$1" in
-        -h|-\?|--help)
+        -h | -\? | --help)
             echo "${USAGE}"
             exit
             ;;
-        -n|--name)
+        -n | --name)
             NAME="$2"
             shift 2
             ;;
-        -u|--uri)
+        -u | --uri)
             URI="$2"
             shift 2
             ;;
-        -v|--hvm)
+        -v | --hvm)
             HVM="Y"
             shift
             ;;
-        -i|--iso)
+        -i | --iso)
             ISO="$2"
             shift 2
             ;;
-        -r|--ram)
+        -r | --ram)
             RAM="$2"
             shift 2
             ;;
-        -s|--size)
+        -s | --size)
             SIZE="$2"
             shift 2
             ;;
-        -f|--format)
+        -f | --format)
             FORMAT="$2"
             shift 2
             ;;
-        -g|--graphics)
+        -g | --graphics)
             GRAPHICS="$2"
             shift 2
             ;;
-        -a|--autostart)
+        -a | --autostart)
             AUTOSTART="Y"
             shift
             ;;
         --)
-            shift;
+            shift
             break
             ;;
-    esac
+  esac
 done
 
 ## Functions
 # Prompt for var configuration (read from var_str) if not set previously
 # Offer default configuration and set var with user input
-ask () {
+ask()  {
     # Use indirect parameter expansion to obtain var value from var string
     local var="${!var_str}"
     local var_str_default="${var_str}_DEFAULT"
@@ -138,22 +140,22 @@ ask () {
         while true; do
             if [ -z "${default}" ]; then
                 read -p "${question}: " answer
-            else
+      else
                 read -p "${question} [${default}]: " answer
-            fi
+      fi
 
             answer="${answer:=${default}}"
             if [ -n "${answer}" ]; then
                 eval ${var_str}="${answer}"
                 break
-            fi
-        done
-    fi
+      fi
+    done
+  fi
 }
 
 # Prompt for var configuration (read from var_str) if not set previously
 # Offer default configuration and set var to '$1' if var is 'Y'
-ask_yn () {
+ask_yn()  {
     # Use indirect parameter expansion to obtain var values from var string
     local var="${!var_str}"
     local var_str_default="${var_str}_DEFAULT"
@@ -165,7 +167,7 @@ ask_yn () {
             [Yy]*) choices="Y/n" ;;
             [Nn]*) choices="y/N" ;;
             *) choices="y/n" ;;
-        esac
+    esac
 
         # Loop until a y/n answer is given
         while true; do
@@ -174,18 +176,20 @@ ask_yn () {
             case "${answer}" in
                 [Yy]*)
                     eval ${var_str}="$1"
-                    break ;;
+                    break
+                          ;;
                 [Nn]*)
                     unset ${var_str}
-                    break ;;
-            esac
-        done
-    else
+                    break
+                          ;;
+      esac
+    done
+  else
         case "${!var_str}" in
             [Yy]*) eval ${var_str}="$1" ;;
             [Nn]*) unset ${var_str} ;;
-        esac
-    fi
+    esac
+  fi
 }
 
 ## Main
